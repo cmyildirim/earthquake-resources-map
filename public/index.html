@@ -183,14 +183,14 @@
             <div class="pb-3">Lütfen tüm bilgieri tam doldurmaya özen gösterin. Adres ve koordinat bilgisi yanlış olursa kayıt geçersiz sayılacaktır. Bilmediğiniz bilgileri boş bırakın.</div>
             
             <div class="mb-3">
-              <select class="form-select" aria-label="Default select">
-                <option selected>Konaklama & Beslenme</option>
+              <select class="form-select" aria-label="Default select" id="categoryDropdown">
+                <option value="0" selected>Konaklama & Beslenme</option>
                 <option value="1">Güvenli Alan</option>
                 <option value="2">Hastane</option>
                 <option value="3">Otobüs</option>
-                <option value="3">Eczane</option>
-                <option value="3">Akaryakıt</option>
-                <option value="3">Diğer</option>
+                <option value="4">Eczane</option>
+                <option value="5">Akaryakıt</option>
+                <option value="6">Diğer</option>
               </select>
             </div>
 
@@ -236,7 +236,7 @@
               <div class="form-text">Bu noktanın duyurulduğu kaynağı yazın.</div>
             </div>
 
-            <button type="submit" class="btn btn-primary">Kaydet</button>
+            <button type="button" class="btn btn-primary" onclick="insertLocation()">Kaydet</button>
 
           </form>
 
@@ -365,6 +365,63 @@
         map.setFilter('csvData', ['has', 'Name']);
 
       }
+    }
+
+    async function insertLocation() {
+      let categorySelectElement = document.getElementById('categoryDropdown');
+      let categoryText = categorySelectElement.options[categorySelectElement.selectedIndex].text;
+
+      let name = document.getElementById('titleInput').value;
+      let city = document.getElementById('cityInput').value;
+      let address = document.getElementById('addressInput').value;
+      let contact = document.getElementById('contactInput').value;
+      let description = document.getElementById('descriptionInput').value;
+      let source = document.getElementById('sourceInput').value;
+
+      let coordinates = document.getElementById('coordinateInput').value.split(',');
+      let lat = parseFloat(coordinates[0].trim());
+      let lon = parseFloat(coordinates[1].trim());
+
+      let requestBody = {
+          cat: categoryText,
+          name: name,
+          city: city,
+          latitude: lat,
+          longtitude: lon,
+          address: address,
+          contact: contact,
+          description: description,
+          source: source
+      }
+
+      fetch('https://earthquake-resources-map-ingestion-worker.ciho.workers.dev', {
+        method: "POST",
+        body: JSON.stringify(requestBody)
+      }).then((response) => {
+        if(response.status >= 400) {
+          
+        } else {
+          alert('Kaydınız başarıyla alındı.');
+          clearAddLocationForm();
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(()=> {
+        $('#formModal').modal('hide');
+      })
+    }
+
+    function clearAddLocationForm() {
+      document.getElementById('categoryDropdown').value = "0";
+      document.getElementById('titleInput').value = '';
+      document.getElementById('cityInput').value = '';
+      document.getElementById('addressInput').value = '';
+      document.getElementById('contactInput').value = '';
+      document.getElementById('descriptionInput').value = '';
+      document.getElementById('sourceInput').value = '';
+      document.getElementById('coordinateInput').value = '';
     }
 
     $(document).ready(function () {
@@ -597,7 +654,7 @@
                   '<div class="panel pt-3"><button data-bs-toggle="modal" data-bs-target="#formModal" class="btn btn-circle btn-dark add-post">Nokta ekle</button></div>'
                 )
                 .addTo(map);
-
+                document.getElementById("coordinateInput").value = `${e.lngLat.lat},${e.lngLat.lng}`;
             });
 
             map.on('mousemove', 'csvData', (e) => {
