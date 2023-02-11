@@ -1,9 +1,12 @@
 name = "earthquake-resources-map-ingestion-worker"
 main = "src/index.ts"
 compatibility_date = "2023-02-10"
+kv_namespaces = [
+  { binding = "GAPI_TOKEN", id = "d4e3506bbcb446ba98d6291811c890b4", preview_id= "d4e3506bbcb446ba98d6291811c890b4" }
+]
 [[r2_buckets]]
 binding = 'SPREADSHEET_BUCKET' # <~ valid JavaScript variable name
 bucket_name = 'spreadsheet-bucket'
 preview_bucket_name = 'spreadsheet-bucket'
 [triggers]
-crons = ["*/1 * * * *"]
+crons = ["*/1 * * * *", "*/45 * * * *"]
