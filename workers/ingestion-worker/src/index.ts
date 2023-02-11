@@ -36,7 +36,16 @@ export default {
 	async fetch(request: Request, env, ctx) {
 		const documentUrl = new URL("https://sheets.googleapis.com/v4/spreadsheets/1fJVVy5GVSoF1BR9VBmijiMmSHaVrroqQN2rif0FmDCI/values/HariciVeriGirisi!A1:I1:append?valueInputOption=USER_ENTERED");
 		const params = await request.json<PointEntry>();
-		
+		const corsHeaders = {
+			"Access-Control-Allow-Origin": "*",
+			"Access-Control-Allow-Methods": "GET, OPTIONS",
+			"Access-Control-Allow-Headers": "*",
+		  };
+		  if (request.method.toLowerCase() === "options") {
+			return new Response("ok", {
+			  headers: corsHeaders,
+			});
+		  }
 		console.log(JSON.stringify(params));
 		if (params) {
 			const gapiRequestBody = {
@@ -57,10 +66,15 @@ export default {
 			console.log(JSON.stringify(await googleResponse.json()))
 		} else {
 			return new Response("Bad request", {status: 400, headers: {
-				'content-type': 'text'
+				'content-type': 'text',
+				...corsHeaders
 			}});
 		}
-		return new Response();
+		return new Response("Success", {
+			headers: {
+				...corsHeaders
+			}
+		});
 	},
 
 	async scheduled(event, env, ctx) {
