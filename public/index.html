@@ -8,8 +8,8 @@
   <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
 
-  <script src="https://api.mapbox.com/mapbox-gl-js/v1.13.2/mapbox-gl.js"></script>
-  <link href="https://api.mapbox.com/mapbox-gl-js/v1.13.2/mapbox-gl.css" rel="stylesheet" />
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css" rel="stylesheet" />
 
   <script src='https://npmcdn.com/csv2geojson@latest/csv2geojson.js'></script>
 
@@ -17,10 +17,12 @@
     integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous">
-  </script>
+    </script>
   <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" rel="stylesheet"> -->
 
   <!-- <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script> -->
+
+  <script src="https://unpkg.com/platform-detect"></script>
 
   <style>
     body {
@@ -147,7 +149,8 @@
 
   <!-- Add Point Button -->
   <div class="addpoint">
-    <button data-bs-toggle="modal" data-bs-target="#formModal" class="btn btn-circle btn-dark add-post">Nokta ekle</button>
+    <button data-bs-toggle="modal" data-bs-target="#formModal" class="btn btn-circle btn-dark add-post">Nokta
+      öner</button>
   </div>
 
   <!-- Loader -->
@@ -172,16 +175,17 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="formModalLabel">Nokta ekle</h1>
+          <h1 class="modal-title fs-5" id="formModalLabel">Nokta öner</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
 
 
-          <form> 
+          <form>
 
-            <div class="pb-3">Lütfen tüm bilgieri tam doldurmaya özen gösterin. Adres ve koordinat bilgisi yanlış olursa kayıt geçersiz sayılacaktır. Bilmediğiniz bilgileri boş bırakın.</div>
-            
+            <div class="pb-3">Lütfen tüm bilgieri tam doldurmaya özen gösterin. Adres ve koordinat bilgisi yanlış olursa
+              kayıt geçersiz sayılacaktır. Bilmediğiniz bilgileri boş bırakın.</div>
+
             <div class="mb-3">
               <select class="form-select" aria-label="Default select" id="categoryDropdown">
                 <option value="0" selected>Konaklama & Beslenme</option>
@@ -221,7 +225,8 @@
             <div class="mb-3">
               <label for="contactInput" class="form-label">İletişim</label>
               <input type="text" class="form-control" id="contactInput">
-              <div class="form-text">Gerektiğinde size ulaşmamız için iletişm bilgisi yazın. Telefon veya eposta olabilir.</div>
+              <div class="form-text">Gerektiğinde size ulaşmamız için iletişm bilgisi yazın. Telefon veya eposta
+                olabilir.</div>
             </div>
 
             <div class="mb-3">
@@ -383,34 +388,34 @@
       let lon = parseFloat(coordinates[1].trim());
 
       let requestBody = {
-          cat: categoryText,
-          name: name,
-          city: city,
-          latitude: lat,
-          longtitude: lon,
-          address: address,
-          contact: contact,
-          description: description,
-          source: source
+        cat: categoryText,
+        name: name,
+        city: city,
+        latitude: lat,
+        longtitude: lon,
+        address: address,
+        contact: contact,
+        description: description,
+        source: source
       }
 
       fetch('https://earthquake-resources-map-ingestion-worker.ciho.workers.dev', {
         method: "POST",
         body: JSON.stringify(requestBody)
       }).then((response) => {
-        if(response.status >= 400) {
-          
+        if (response.status >= 400) {
+
         } else {
           alert('Kaydınız başarıyla alındı.');
           clearAddLocationForm();
         }
       })
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(()=> {
-        $('#formModal').modal('hide');
-      })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          $('#formModal').modal('hide');
+        })
     }
 
     function clearAddLocationForm() {
@@ -570,7 +575,7 @@
                 `<span><b>Adres: </b>` + e.features[0].properties.Address + `</span><br>` +
                 `<span><b>Açıklama: </b>` + e.features[0].properties.Description + `</span><br>` +
                 `<p class="small pt-1 mt-2 border-top"><b>Kaynak: </b>` + e.features[0].properties
-                .Source + `</p>` +
+                  .Source + `</p>` +
                 `<p class="small pt-1 mt-2 border-top"><b>Koordinat: </b><a class="link-dark text-decoration-none" href="https://www.google.com/maps/place/${coordinates[1]},${coordinates[0]}" target="_blank">${coordinates[1]}, ${coordinates[0]}</a></p>` +
                 `<div class="btn btn-primary btn-sm"><a class="link-light text-decoration-none" href="https://maps.google.com/maps/dir/?api=1&destination=${coordinates[1]},${coordinates[0]}" target="_blank">Yol tarifi</a></div>`;
 
@@ -639,22 +644,7 @@
             });
 
             map.on('contextmenu', function (e) {
-              // If there is opened, remove first
-              const popups = document.getElementsByClassName('mapboxgl-popup');
-              if (popups.length) {
-                popups[0].remove();
-              }
-
-              var popup = new mapboxgl.Popup({
-                  closeOnClick: true
-                })
-                .setLngLat(e.lngLat)
-                //.setHTML(e.lngLat.lat + ',</br>' + e.lngLat.lng)
-                .setHTML(e.lngLat.lat + ',</br>' + e.lngLat.lng + '</br>' +
-                  '<div class="panel pt-3"><button data-bs-toggle="modal" data-bs-target="#formModal" class="btn btn-circle btn-dark add-post">Nokta ekle</button></div>'
-                )
-                .addTo(map);
-                document.getElementById("coordinateInput").value = `${e.lngLat.lat},${e.lngLat.lng}`;
+              showContextMenu(e);
             });
 
             map.on('mousemove', 'csvData', (e) => {
@@ -705,10 +695,60 @@
               }
             });
             renderListings([]);
+
+            //add context menu functionality for mobile devices
+            var platform = window['platform-detect'];
+            console.log('This device has a mouse: ', platform.mouse);
+            if(!platform.mouse)
+            {
+              initMobileContextMenu();
+            }
           });
 
         });
       };
+
+      function initMobileContextMenu() {
+        let mobileTimeout = null;
+        let clearMobileTimeout = () => { clearTimeout(mobileTimeout); };
+
+        map.on('touchstart', (e) => {
+          if (e.originalEvent.touches.length > 1) {
+            return;
+          }
+          mobileTimeout = setTimeout(() => {
+            showContextMenu(e);
+          }, 300);
+        });
+        map.on('touchend', clearMobileTimeout);
+        map.on('touchcancel', clearMobileTimeout);
+        map.on('touchmove', clearMobileTimeout);
+        map.on('pointerdrag', clearMobileTimeout);
+        map.on('pointermove', clearMobileTimeout);
+        map.on('moveend', clearMobileTimeout);
+        map.on('gesturestart', clearMobileTimeout);
+        map.on('gesturechange', clearMobileTimeout);
+        map.on('gestureend', clearMobileTimeout);
+      };
+
+      function showContextMenu(e) {
+        // If there is opened, remove first
+        const popups = document.getElementsByClassName('mapboxgl-popup');
+        if (popups.length) {
+          popups[0].remove();
+        }
+
+        var popup = new mapboxgl.Popup({
+          closeOnClick: true
+        })
+          .setLngLat(e.lngLat)
+          //.setHTML(e.lngLat.lat + ',</br>' + e.lngLat.lng)
+          .setHTML(e.lngLat.lat + ',</br>' + e.lngLat.lng + '</br>' +
+            '<div class="panel pt-3"><button data-bs-toggle="modal" data-bs-target="#formModal" class="btn btn-circle btn-dark add-post">Nokta öner</button></div>'
+          )
+          .addTo(map);
+        document.getElementById("coordinateInput").value = `${e.lngLat.lat},${e.lngLat.lng}`;
+      }
     });
   </script>
 
