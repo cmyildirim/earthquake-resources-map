@@ -86,14 +86,6 @@
       cursor: pointer;
     }
 
-    .mapboxgl-popup-anchor-top>.mapboxgl-popup-content {
-      margin-top: 3px;
-    }
-
-    .mapboxgl-popup-anchor-top>.mapboxgl-popup-tip {
-      border-bottom-color: rgb(61, 59, 59);
-    }
-
     .map-overlay {
       background-color: #eeeeee;
       height: 100vh;
@@ -141,6 +133,10 @@
 
     .map-overlay .listing a:hover {
       background: white;
+    }
+
+    .modal {
+      z-index: 99999;
     }
   </style>
 </head>
@@ -700,8 +696,7 @@
             //add context menu functionality for mobile devices
             var platform = window['platform-detect'];
             console.log('This device has a mouse: ', platform.mouse);
-            if(!platform.mouse)
-            {
+            if (!platform.mouse) {
               initMobileContextMenu();
             }
           });
