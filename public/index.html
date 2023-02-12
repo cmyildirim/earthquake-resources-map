@@ -494,6 +494,12 @@
                   'Veteriner', '#8e44ad ',
                   'Otobüs', '#283747',
                   'Konaklama & Beslenme', '#e67e22',
+                  'Akaryakıt', '#134f5c',
+                  'Eczane', '#6fa8dc',
+                  'Erzak', '#e69138',
+                  'Mobil Tuvalet', '#3d85c6',
+                  'Beslenme', '#93c47d',
+                  'Hastane', '#45818e',
                   /* other */
                   ' #fee090'
                 ],
@@ -505,6 +511,12 @@
                   'Veteriner', 8,
                   'Otobüs', 8,
                   'Konaklama & Beslenme', 8,
+                  'Akaryakıt', 8,
+                  'Eczane', 8,
+                  'Erzak', 8,
+                  'Mobil Tuvalet', 8,
+                  'Beslenme', 8,
+                  'Hastane', 8,
                   /* other */
                   8
                 ],
@@ -568,9 +580,8 @@
                 `<span><b>İletişim: </b>` + e.features[0].properties.Contact + `</span><br>` +
                 `<span><b>Adres: </b>` + e.features[0].properties.Address + `</span><br>` +
                 `<span><b>Açıklama: </b>` + e.features[0].properties.Description + `</span><br>` +
-                `<p class="small pt-1 mt-2 border-top"><b>Kaynak: </b>` + e.features[0].properties
-                  .Source + `</p>` +
-                `<p class="small pt-1 mt-2 border-top"><b>Koordinat: </b><a class="link-dark text-decoration-none" href="https://www.google.com/maps/place/${coordinates[1]},${coordinates[0]}" target="_blank">${coordinates[1]}, ${coordinates[0]}</a></p>` +
+                `<div class="small pt-2 mt-2 border-top"><b>Kaynak: </b>` + e.features[0].properties.Source + `</div>` +
+                `<div class="small pt-2 mt-2 pb-2 border-top"><b>Koordinat: </b><a class="link-dark text-decoration-none" href="https://www.google.com/maps/place/${coordinates[1]},${coordinates[0]}" target="_blank">${coordinates[1]}, ${coordinates[0]}</a></div>` +
                 `<div class="btn btn-primary btn-sm"><a class="link-light text-decoration-none" href="https://maps.google.com/maps/dir/?api=1&destination=${coordinates[1]},${coordinates[0]}" target="_blank">Yol tarifi</a></div>`;
 
               new mapboxgl.Popup()
@@ -583,7 +594,7 @@
 
             map.on('mouseenter', 'csvData', function (e) {
               map.getCanvas().style.cursor = 'pointer';
-              map.setFilter("placehover", ["==", "Address", e.features[0].properties.Name]);
+              map.setFilter("placehover", ["==", "Address", e.features[0].properties.Address]);
             });
 
             map.on('mouseleave', 'csvData', function (e) {
