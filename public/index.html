@@ -587,12 +587,12 @@
 
             map.on('mouseenter', 'csvData', function (e) {
               map.getCanvas().style.cursor = 'pointer';
-              map.setFilter("placehover", ["==", "Name", e.features[0].properties.Name]);
+              map.setFilter("placehover", ["==", "Address", e.features[0].properties.Name]);
             });
 
             map.on('mouseleave', 'csvData', function (e) {
               map.getCanvas().style.cursor = '';
-              map.setFilter("placehover", ["==", "Name", ""]);
+              map.setFilter("placehover", ["==", "Address", ""]);
             });
 
             //Hide loading bar once tiles from geojson are loaded
