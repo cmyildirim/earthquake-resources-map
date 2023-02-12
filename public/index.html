@@ -443,6 +443,7 @@
           lonfield: 'Longitude',
           delimiter: ','
         }, function (err, data) {
+          console.log('geojsonparseerror', err);
           map.on('load', function () {
             map.addSource('csvDataSet', {
               "type": "geojson",
