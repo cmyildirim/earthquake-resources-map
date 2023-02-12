@@ -68,10 +68,6 @@
       display: none;
     }
 
-    .mapboxgl-popup-anchor-top {
-      margin: 2rem 0 2rem 0;
-    }
-
     .mapboxgl-popup-content {
       font: 16px/20px Helvetica Neue, Arial, Helvetica, sans-serif;
       padding: 0.5rem;
@@ -84,14 +80,6 @@
 
     .mapboxgl-container {
       cursor: pointer;
-    }
-
-    .mapboxgl-popup-anchor-top>.mapboxgl-popup-content {
-      margin-top: 3px;
-    }
-
-    .mapboxgl-popup-anchor-top>.mapboxgl-popup-tip {
-      border-bottom-color: rgb(61, 59, 59);
     }
 
     .map-overlay {
@@ -141,6 +129,10 @@
 
     .map-overlay .listing a:hover {
       background: white;
+    }
+
+    .modal {
+      z-index: 99999;
     }
   </style>
 </head>
@@ -263,7 +255,7 @@
       </fieldset>
       <div id="feature-listing" class="listing"></div>
     </div>
-    <div id="map" class="col-md-9 col-12 flex-fill sticky-top"></div>
+    <div id="map" class="col-md-9 col-sm-9 col-12 flex-fill sticky-top"></div>
   </div>
 
   <script>
@@ -324,7 +316,7 @@
       const empty = document.createElement('p');
       // Clear any existing listings
       listingEl.innerHTML = '';
-      const maxFeatureLength = 50;
+      const maxFeatureLength = 100;
       if (features.length && features.length < maxFeatureLength) {
         for (const feature of features) {
           const itemLink = document.createElement('a');
@@ -447,6 +439,7 @@
           lonfield: 'Longitude',
           delimiter: ','
         }, function (err, data) {
+          console.log('geojsonparseerror', err);
           map.on('load', function () {
             map.addSource('csvDataSet', {
               "type": "geojson",
@@ -559,7 +552,7 @@
             // location of the feature, with description HTML from its properties.
 
             const clickHandler = e => {
-              map.setFilter("placehighlight", ["==", "Name", e.features[0].properties.Name]);
+              map.setFilter("placehighlight", ["==", "Address", e.features[0].properties.Address]);
 
               var coordinates = e.features[0].geometry.coordinates.slice();
 
@@ -590,12 +583,12 @@
 
             map.on('mouseenter', 'csvData', function (e) {
               map.getCanvas().style.cursor = 'pointer';
-              map.setFilter("placehover", ["==", "Name", e.features[0].properties.Name]);
+              map.setFilter("placehover", ["==", "Address", e.features[0].properties.Name]);
             });
 
             map.on('mouseleave', 'csvData', function (e) {
               map.getCanvas().style.cursor = '';
-              map.setFilter("placehover", ["==", "Name", ""]);
+              map.setFilter("placehover", ["==", "Address", ""]);
             });
 
             //Hide loading bar once tiles from geojson are loaded
@@ -700,8 +693,7 @@
             //add context menu functionality for mobile devices
             var platform = window['platform-detect'];
             console.log('This device has a mouse: ', platform.mouse);
-            if(!platform.mouse)
-            {
+            if (!platform.mouse) {
               initMobileContextMenu();
             }
           });
