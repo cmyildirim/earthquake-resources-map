@@ -1,0 +1,9 @@
+name = "earthquake-resources-map-cache-worker"
+main = "src/index.ts"
+compatibility_date = "2023-02-12"
+routes = [	{ pattern = "earthquake-resources-map-cache-worker.vatozsoftware.com/*", zone_name =  "vatozsoftware.com"}]
+
+[[r2_buckets]]
+binding = 'SPREADSHEET_BUCKET' # <~ valid JavaScript variable name
+bucket_name = 'spreadsheet-bucket'
+preview_bucket_name = 'spreadsheet-bucket'
