@@ -22,7 +22,11 @@ export interface Env {
 export default {
   async fetch(request: Request, env: Env, context: ExecutionContext) {
 	let origin = request.headers.get("Origin");
-	if(!(origin && (origin.includes("vatozsoftware.com") || origin.includes("earthquake-resources-map.pages.dev"))))
+	if(origin == "null" || origin?.includes("127.0.0.1") || origin?.includes("localhost")) //for localhost
+	{
+		origin = "*"
+	}
+	else if(!(origin && (origin.includes("vatozsoftware.com") || origin.includes("earthquake-resources-map.pages.dev"))))
 	{
 		origin = "unknown"
 	}
