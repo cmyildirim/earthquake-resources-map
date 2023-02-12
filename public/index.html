@@ -556,7 +556,7 @@
             // location of the feature, with description HTML from its properties.
 
             const clickHandler = e => {
-              map.setFilter("placehighlight", ["==", "Name", e.features[0].properties.Name]);
+              map.setFilter("placehighlight", ["==", "Address", e.features[0].properties.Address]);
 
               var coordinates = e.features[0].geometry.coordinates.slice();
 
