@@ -13,14 +13,16 @@
 
   <script src='https://npmcdn.com/csv2geojson@latest/csv2geojson.js'></script>
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous">
+  </script>
   <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" rel="stylesheet"> -->
 
   <!-- <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script> -->
 
   <style>
-
     body {
       margin: 0;
       padding: 0;
@@ -36,22 +38,29 @@
       justify-content: center;
     }
 
+    .addpoint {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 99999;
+    }
+
     #map {
       position: absolute;
       top: 0;
       bottom: 0;
-      right:0;
+      right: 0;
     }
 
     /* Popup styling */
 
     .mapboxgl-popup {
-      padding-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
     }
 
-    .mapboxgl-popup-tip {
+    /* .mapboxgl-popup-tip {
       display: none;
-    }
+    } */
 
     .mapboxgl-popup-close-button {
       display: none;
@@ -62,7 +71,7 @@
     }
 
     .mapboxgl-popup-content {
-      font: 16px/20px Helvetica Neue,Arial,Helvetica,sans-serif;
+      font: 16px/20px Helvetica Neue, Arial, Helvetica, sans-serif;
       padding: 0.5rem;
       width: 250px;
     }
@@ -136,30 +145,121 @@
 
 <body>
 
+  <!-- Add Point Button -->
+  <div class="addpoint">
+    <button data-bs-toggle="modal" data-bs-target="#formModal" class="btn btn-circle btn-dark add-post">Nokta ekle</button>
+  </div>
+
+  <!-- Loader -->
   <div class="loader" id="loader">
-    <svg version="1.1" id="loader-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="40px" height="40px" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve">
-        <path opacity="0.3" fill="#fff" d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946
+    <svg version="1.1" id="loader-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+      x="0px" y="0px" width="40px" height="40px" viewBox="0 0 40 40" enable-background="new 0 0 40 40"
+      xml:space="preserve">
+      <path opacity="0.3" fill="#fff"
+        d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946
             s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634
             c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z" />
-                    <path fill="#000" d="M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0
+      <path fill="#000" d="M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0
             C22.32,8.481,24.301,9.057,26.013,10.047z">
-            <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 20 20" to="360 20 20" dur="0.5s" repeatCount="indefinite" />
-        </path>
+        <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 20 20" to="360 20 20"
+          dur="0.5s" repeatCount="indefinite" />
+      </path>
     </svg>
-</div>
+  </div>
 
-    <div class="d-flex  no-gutters align-items-start">
-
-        <div class="map-overlay d-none d-sm-block col-12 col-lg-3 col-md-3 col-sm-3 col-xs-6 pt-6">
-          <fieldset>
-            <input id="feature-filter" type="text" placeholder="İsme göre filtrele">
-          </fieldset>
-          <div id="feature-listing" class="listing"></div>
+  <!-- Modal -->
+  <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="formModalLabel">Nokta ekle</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+        <div class="modal-body">
 
-        <div id="map" class="col-md-9 col-12 flex-fill sticky-top"></div>
 
+          <form> 
+
+            <div class="pb-3">Lütfen tüm bilgieri tam doldurmaya özen gösterin. Adres ve koordinat bilgisi yanlış olursa kayıt geçersiz sayılacaktır. Bilmediğiniz bilgileri boş bırakın.</div>
+            
+            <div class="mb-3">
+              <select class="form-select" aria-label="Default select" id="categoryDropdown">
+                <option value="0" selected>Konaklama & Beslenme</option>
+                <option value="1">Güvenli Alan</option>
+                <option value="2">Hastane</option>
+                <option value="3">Otobüs</option>
+                <option value="4">Eczane</option>
+                <option value="5">Akaryakıt</option>
+                <option value="6">Diğer</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="titleInput" class="form-label">Başlık</label>
+              <input type="email" class="form-control" id="titleInput" aria-describedby="catHelp">
+              <div class="form-text">Bir başlık yazın.</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="cityInput" class="form-label">Şehir</label>
+              <input type="text" class="form-control" id="cityInput">
+              <div class="form-text">İl adı yazın.</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="coordinateInput" class="form-label">Koordinat</label>
+              <input type="text" class="form-control" id="coordinateInput">
+              <div class="form-text">"Enlem virgül boylam" şeklinde yazın.</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="addressInput" class="form-label">Adres</label>
+              <input type="text" class="form-control" id="addressInput">
+              <div class="form-text">Şehir ve ilçe bilgisi içerecek şekilde tam adresi yazın.</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="contactInput" class="form-label">İletişim</label>
+              <input type="text" class="form-control" id="contactInput">
+              <div class="form-text">Gerektiğinde size ulaşmamız için iletişm bilgisi yazın. Telefon veya eposta olabilir.</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="descriptionInput" class="form-label">Açıklama</label>
+              <input type="text" class="form-control" id="descriptionInput">
+              <div class="form-text">Daha fazla detay yazın</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="sourceInput" class="form-label">Kaynak</label>
+              <input type="text" class="form-control" id="sourceInput">
+              <div class="form-text">Bu noktanın duyurulduğu kaynağı yazın.</div>
+            </div>
+
+            <button type="button" class="btn btn-primary" onclick="insertLocation()">Kaydet</button>
+
+          </form>
+
+
+        </div>
+        <!-- <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+          <button type="button" class="btn btn-primary">Kaydet</button>
+        </div> -->
+      </div>
     </div>
+  </div>
+
+  <!-- Container -->
+  <div class="d-flex  no-gutters align-items-start">
+    <div class="map-overlay d-none d-sm-block col-12 col-lg-3 col-md-3 col-sm-3 col-xs-6 pt-6">
+      <fieldset>
+        <input id="feature-filter" type="text" placeholder="İsme göre filtrele">
+      </fieldset>
+      <div id="feature-listing" class="listing"></div>
+    </div>
+    <div id="map" class="col-md-9 col-12 flex-fill sticky-top"></div>
+  </div>
 
   <script>
     var transformRequest = (url, resourceType) => {
@@ -168,8 +268,7 @@
         url.slice(10, 26) === "tiles.mapbox.com";
       return {
         url: isMapboxRequest ?
-          url.replace("?", "?pluginName=sheetMapper&") :
-          url
+          url.replace("?", "?pluginName=sheetMapper&") : url
       };
     };
 
@@ -252,7 +351,7 @@
         empty.textContent = 'Sonuç bulunamadı.';
         listingEl.appendChild(empty);
       } else {
-        if ( features.length >= 30) {
+        if (features.length >= 30) {
           empty.textContent = 'Sonuçları görmek için haritayı yakınlaştırın';
         } else {
           empty.textContent = 'Sonuçları görmek için haritayı kaydırın';
@@ -266,6 +365,63 @@
         map.setFilter('csvData', ['has', 'Name']);
 
       }
+    }
+
+    async function insertLocation() {
+      let categorySelectElement = document.getElementById('categoryDropdown');
+      let categoryText = categorySelectElement.options[categorySelectElement.selectedIndex].text;
+
+      let name = document.getElementById('titleInput').value;
+      let city = document.getElementById('cityInput').value;
+      let address = document.getElementById('addressInput').value;
+      let contact = document.getElementById('contactInput').value;
+      let description = document.getElementById('descriptionInput').value;
+      let source = document.getElementById('sourceInput').value;
+
+      let coordinates = document.getElementById('coordinateInput').value.split(',');
+      let lat = parseFloat(coordinates[0].trim());
+      let lon = parseFloat(coordinates[1].trim());
+
+      let requestBody = {
+          cat: categoryText,
+          name: name,
+          city: city,
+          latitude: lat,
+          longtitude: lon,
+          address: address,
+          contact: contact,
+          description: description,
+          source: source
+      }
+
+      fetch('https://earthquake-resources-map-ingestion-worker.ciho.workers.dev', {
+        method: "POST",
+        body: JSON.stringify(requestBody)
+      }).then((response) => {
+        if(response.status >= 400) {
+          
+        } else {
+          alert('Kaydınız başarıyla alındı.');
+          clearAddLocationForm();
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(()=> {
+        $('#formModal').modal('hide');
+      })
+    }
+
+    function clearAddLocationForm() {
+      document.getElementById('categoryDropdown').value = "0";
+      document.getElementById('titleInput').value = '';
+      document.getElementById('cityInput').value = '';
+      document.getElementById('addressInput').value = '';
+      document.getElementById('contactInput').value = '';
+      document.getElementById('descriptionInput').value = '';
+      document.getElementById('sourceInput').value = '';
+      document.getElementById('coordinateInput').value = '';
     }
 
     $(document).ready(function () {
@@ -413,10 +569,10 @@
                 `<span><b>İletişim: </b>` + e.features[0].properties.Contact + `</span><br>` +
                 `<span><b>Adres: </b>` + e.features[0].properties.Address + `</span><br>` +
                 `<span><b>Açıklama: </b>` + e.features[0].properties.Description + `</span><br>` +
-                `<p class="small pt-1 mt-2 border-top"><b>Kaynak: </b>` + e.features[0].properties.Source + `</p>` +
+                `<p class="small pt-1 mt-2 border-top"><b>Kaynak: </b>` + e.features[0].properties
+                .Source + `</p>` +
                 `<p class="small pt-1 mt-2 border-top"><b>Koordinat: </b><a class="link-dark text-decoration-none" href="https://www.google.com/maps/place/${coordinates[1]},${coordinates[0]}" target="_blank">${coordinates[1]}, ${coordinates[0]}</a></p>` +
-                `<div class="btn btn-primary btn-sm"><a class="link-light text-decoration-none" href="https://maps.google.com/maps/dir/?api=1&destination=${coordinates[1]},${coordinates[0]}" target="_blank">Yol tarifi</a></div>`
-              ;
+                `<div class="btn btn-primary btn-sm"><a class="link-light text-decoration-none" href="https://maps.google.com/maps/dir/?api=1&destination=${coordinates[1]},${coordinates[0]}" target="_blank">Yol tarifi</a></div>`;
 
               new mapboxgl.Popup()
                 .setLngLat(coordinates)
@@ -464,7 +620,9 @@
             });
 
             map.on('moveend', () => {
-              const features = map.queryRenderedFeatures({ layers: ['csvData'] });
+              const features = map.queryRenderedFeatures({
+                layers: ['csvData']
+              });
 
               if (features) {
                 const uniqueFeatures = getUniqueFeatures(features, 'Name', 'Address');
@@ -478,6 +636,25 @@
                 // later use for filtering on `keyup`.
                 csvDataSet = uniqueFeatures;
               }
+            });
+
+            map.on('contextmenu', function (e) {
+              // If there is opened, remove first
+              const popups = document.getElementsByClassName('mapboxgl-popup');
+              if (popups.length) {
+                popups[0].remove();
+              }
+
+              var popup = new mapboxgl.Popup({
+                  closeOnClick: true
+                })
+                .setLngLat(e.lngLat)
+                //.setHTML(e.lngLat.lat + ',</br>' + e.lngLat.lng)
+                .setHTML(e.lngLat.lat + ',</br>' + e.lngLat.lng + '</br>' +
+                  '<div class="panel pt-3"><button data-bs-toggle="modal" data-bs-target="#formModal" class="btn btn-circle btn-dark add-post">Nokta ekle</button></div>'
+                )
+                .addTo(map);
+                document.getElementById("coordinateInput").value = `${e.lngLat.lat},${e.lngLat.lng}`;
             });
 
             map.on('mousemove', 'csvData', (e) => {
