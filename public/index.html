@@ -164,17 +164,14 @@
 
   <!-- Modal -->
   <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="formModalLabel">Nokta öner</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-
-
           <form>
-
             <div class="pb-3">Lütfen tüm bilgieri tam doldurmaya özen gösterin. Adres ve koordinat bilgisi yanlış olursa
               kayıt geçersiz sayılacaktır. Bilmediğiniz bilgileri boş bırakın.</div>
 
@@ -226,23 +223,16 @@
               <input type="text" class="form-control" id="descriptionInput">
               <div class="form-text">Daha fazla detay yazın</div>
             </div>
-
             <div class="mb-3">
               <label for="sourceInput" class="form-label">Kaynak</label>
               <input type="text" class="form-control" id="sourceInput">
               <div class="form-text">Bu noktanın duyurulduğu kaynağı yazın.</div>
             </div>
-
-            <button type="button" class="btn btn-primary" onclick="insertLocation()">Kaydet</button>
-
           </form>
-
-
         </div>
-        <!-- <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
-          <button type="button" class="btn btn-primary">Kaydet</button>
-        </div> -->
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" onclick="insertLocation()">Kaydet</button>
+        </div>
       </div>
     </div>
   </div>
