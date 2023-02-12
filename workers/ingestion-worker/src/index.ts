@@ -32,7 +32,7 @@ export interface PointEntry {
 }
 
 export default {
-  async fetch(request: Request, env, ctx) {
+  async fetch(request: Request, env: Env, context: ExecutionContext) {
     const documentUrl = new URL(
       "https://sheets.googleapis.com/v4/spreadsheets/1fJVVy5GVSoF1BR9VBmijiMmSHaVrroqQN2rif0FmDCI/values/HariciVeriGirisi!A1:I1:append?valueInputOption=USER_ENTERED"
     );
@@ -91,8 +91,10 @@ export default {
     });
   },
 
-  async scheduled(event, env, ctx) {
-    switch (event.cron) {
+  async scheduled(controller: ScheduledController,
+		env: Env,
+		ctx: ExecutionContext) {
+    switch (controller.cron) {
       case "*/1 * * * *":
         const url = new URL(
           "https://docs.google.com/spreadsheets/d/1fJVVy5GVSoF1BR9VBmijiMmSHaVrroqQN2rif0FmDCI/gviz/tq?tqx=out:csv&sheet=Sheet1"
@@ -100,7 +102,7 @@ export default {
         const key = "/spread-sheet/csv";
         var response = await fetch(new Request(url));
         ctx.waitUntil(
-          await env.SPREADSHEET_BUCKET.put(key, await response.text())
+          env.SPREADSHEET_BUCKET.put(key, await response.text())
         );
         break;
       case "*/45 * * * *":
@@ -109,7 +111,7 @@ export default {
         );
         var tokenResponse = await fetch(new Request(tokenUrl));
         ctx.waitUntil(
-          await env.GAPI_TOKEN.put(
+          env.GAPI_TOKEN.put(
             "spreadsheet_scope",
             await tokenResponse.text()
           )
