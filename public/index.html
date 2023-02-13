@@ -6,10 +6,9 @@
   <title>İhtiyaç Haritası</title>
 
   <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mapbox-gl/2.12.1/mapbox-gl.min.js"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/mapbox-gl/2.12.1/mapbox-gl.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/mapbox-gl@2.12.1/dist/mapbox-gl.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mapbox-gl@2.12.1/dist/mapbox-gl.min.css">
 
   <script src='https://cdn.jsdelivr.net/npm/csv2geojson@5.1.2/csv2geojson.min.js'></script>
 
@@ -158,8 +157,8 @@
         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
       <div class="toast-body">
-        Refakatsiz bir çocuk gördüğünüzde Aile Bakanlığı’nın aşağıdaki numaralarını 7/24 arayabilirsiniz.<br/>
-        <a href="tel:+905017301050">0501 730 10 50</a><br/>
+        Refakatsiz bir çocuk gördüğünüzde Aile Bakanlığı’nın aşağıdaki numaralarını 7/24 arayabilirsiniz.<br />
+        <a href="tel:+905017301050">0501 730 10 50</a><br />
         <a href="tel:+905017301060">0501 730 10 60</a>
       </div>
     </div>
@@ -437,7 +436,18 @@
       document.getElementById('coordinateInput').value = '';
     }
 
-    $(document).ready(function () {
+    function ready(callback) {
+      // in case the document is already rendered
+      if (document.readyState != 'loading') callback();
+      // modern browsers
+      else if (document.addEventListener) document.addEventListener('DOMContentLoaded', callback);
+      // IE <= 8
+      else document.attachEvent('onreadystatechange', function () {
+        if (document.readyState == 'complete') callback();
+      });
+    }
+
+    ready(function () {
       const retry = (fn, retriesLeft = 5, interval = 1000) => {
         return new Promise((resolve, reject) => {
           fn()
