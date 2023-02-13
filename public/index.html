@@ -427,10 +427,28 @@
     }
 
     $(document).ready(function () {
-      fetch('https://earthquake-resources-map-cache-worker.vatozsoftware.com//spread-sheet/csv')
-      .then((response) => response.text())
-      .then((responseText) => makeGeoJSON(responseText));
-      
+      const retry = (fn, retriesLeft = 5, interval = 1000) => {
+        return new Promise((resolve, reject) => {
+          fn()
+            .then(resolve)
+            .catch(error => {
+              setTimeout(() => {
+                if (retriesLeft === 1) {
+                  // reject('maximum retries exceeded');
+                  reject(error);
+                  return;
+                }
+                // Passing on "reject" is the important part
+                retry(fn, retriesLeft - 1, interval).then(resolve, reject);
+              }, interval);
+            });
+        });
+      };
+
+      retry(() => fetch('https://earthquake-resources-map-cache-worker.vatozsoftware.com//spread-sheet/csv'))
+        .then(response => response.text())
+        .then(responseText => makeGeoJSON(responseText))
+        .catch(error => console.log(error));
 
       function makeGeoJSON(csvData) {
         csv2geojson.csv2geojson(csvData, {
@@ -710,7 +728,7 @@
               ? "Yardım noktası eklemek için haritada bir noktaya sağ tıklayın"
               : "Yardım noktası eklemek için haritada bir noktaya basılı tutun.";
 
-            const toast = new bootstrap.Toast(document.getElementById("liveToast"), {delay: 15000});
+            const toast = new bootstrap.Toast(document.getElementById("liveToast"), { delay: 15000 });
             toast.show();
           });
 
