@@ -427,12 +427,6 @@
     }
 
     $(document).ready(function () {
-
-      retry(() => fetch('https://earthquake-resources-map-cache-worker.vatozsoftware.com//spread-sheet/csv'))
-        .then(response => response.text())
-        .then(responseText => makeGeoJSON(responseText))
-        .catch(error => console.log(error));
-
       const retry = (fn, retriesLeft = 5, interval = 1000) => {
         return new Promise((resolve, reject) => {
           fn()
@@ -450,6 +444,11 @@
             });
         });
       };
+
+      retry(() => fetch('https://earthquake-resources-map-cache-worker.vatozsoftware.com//spread-sheet/csv'))
+        .then(response => response.text())
+        .then(responseText => makeGeoJSON(responseText))
+        .catch(error => console.log(error));
 
       function makeGeoJSON(csvData) {
         csv2geojson.csv2geojson(csvData, {
