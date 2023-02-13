@@ -427,15 +427,10 @@
     }
 
     $(document).ready(function () {
-      $.ajax({
-        type: "GET",
-        //YOUR TURN: Replace with csv export link
-        url: 'https://earthquake-resources-map-cache-worker.vatozsoftware.com//spread-sheet/csv',
-        dataType: "text",
-        success: function (csvData) {
-          makeGeoJSON(csvData);
-        }
-      });
+      fetch('https://earthquake-resources-map-cache-worker.vatozsoftware.com//spread-sheet/csv')
+      .then((response) => response.text())
+      .then((responseText) => makeGeoJSON(responseText));
+      
 
       function makeGeoJSON(csvData) {
         csv2geojson.csv2geojson(csvData, {
@@ -455,8 +450,8 @@
               'id': 'title',
               'type': 'symbol',
               'source': 'csvDataSet',
-              'minzoom': 12,
-
+              'minzoom': 8,
+              'maxzoom': 13,
               'layout': {
 
                 'text-field': [
