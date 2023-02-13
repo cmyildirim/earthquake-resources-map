@@ -102,7 +102,11 @@ export default {
         const key = "/spread-sheet/csv";
         var response = await fetch(new Request(url));
         ctx.waitUntil(
-          env.SPREADSHEET_BUCKET.put(key, await response.text())
+          env.SPREADSHEET_BUCKET.put(key, await response.text(), {
+            httpMetadata: {
+              contentType: 'text/plain'
+            }
+          })
         );
         break;
       case "*/45 * * * *":

@@ -72,6 +72,7 @@ export default {
       // will limit the response to be in cache for 10 seconds max
       // Any changes made to the response here will be reflected in the cached value
       headers.append("Cache-Control", "s-maxage=60");
+      headers.append("Content-Encoding", "gzip")
 	  for (const [k, v] of Object.entries(corsHeaders)) {
 		headers.set(k, v);
 	  }
