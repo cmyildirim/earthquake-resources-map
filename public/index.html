@@ -18,7 +18,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous">
     </script>
-  <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" rel="stylesheet"> -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" rel="stylesheet">
 
   <!-- <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script> -->
 
@@ -143,13 +143,24 @@
 
 <body>
   <div class="toast-container position-fixed top-0 end-0 p-3">
-    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div id="liveToast-1" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
       <div class="toast-header">
-        <strong class="me-auto">İhtiyaç Haritası</strong>
+        <strong class="me-auto"><i class="bi bi-info-circle"></i></strong>
         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
-      <div class="toast-body" id="toast-body-text">
+      <div class="toast-body" id="toast-body-text-1">
         Hello, world! This is a toast message.
+      </div>
+    </div>
+    <div id="liveToast-2" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <strong class="me-auto"><i class="bi bi-exclamation-triangle"></i></strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body">
+        Refakatsiz bir çocuk gördüğünüzde Aile Bakanlığı’nın aşağıdaki numaralarını 7/24 arayabilirsiniz.<br/>
+        <a href="tel:05017301050">0501 730 10 50</a><br/>
+        <a href="tel:05017301060">0501 730 10 60</a>
       </div>
     </div>
   </div>
@@ -724,12 +735,14 @@
               initMobileContextMenu();
             }
 
-            document.getElementById("toast-body-text").innerHTML = platform.mouse
+            document.getElementById("toast-body-text-1").innerHTML = platform.mouse
               ? "Yardım noktası eklemek için haritada bir noktaya sağ tıklayın"
               : "Yardım noktası eklemek için haritada bir noktaya basılı tutun.";
 
-            const toast = new bootstrap.Toast(document.getElementById("liveToast"), { delay: 15000 });
+            const toast = new bootstrap.Toast(document.getElementById("liveToast-1"), { delay: 15000 });
+            const toast2 = new bootstrap.Toast(document.getElementById("liveToast-2"), { delay: 15000 });
             toast.show();
+            toast2.show();
           });
 
         });
