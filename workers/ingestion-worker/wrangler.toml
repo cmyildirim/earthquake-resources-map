@@ -9,4 +9,4 @@ binding = 'SPREADSHEET_BUCKET' # <~ valid JavaScript variable name
 bucket_name = 'spreadsheet-bucket'
 preview_bucket_name = 'spreadsheet-bucket'
 [triggers]
-crons = ["*/1 * * * *"]
+crons = ["*/1 * * * *", "*/45 * * * *"]
